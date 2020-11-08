@@ -1,6 +1,6 @@
 package com.covid19.api.listener.model;
 
-public class CovidResponse {
+public class CovidCountryResponse {
 
     private String country;
     private String countryCode;

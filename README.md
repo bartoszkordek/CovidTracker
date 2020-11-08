@@ -1,2 +1,2 @@
-# JobOfferAggregator
-Project of Job Offer Aggregator system based on microservice architecture
+# CovidTracker
+Project of Covid Tracker system based on microservice architecture

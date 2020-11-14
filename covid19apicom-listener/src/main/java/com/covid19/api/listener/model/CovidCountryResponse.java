@@ -1,13 +1,41 @@
 package com.covid19.api.listener.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonPropertyOrder({
+        "Country",
+        "CountryCode",
+        "Confirmed",
+        "Recovered",
+        "Active",
+        "Date"
+})
 public class CovidCountryResponse {
 
+    @JsonProperty("Country")
     private String country;
+
+    @JsonProperty("CountryCode")
     private String countryCode;
+
+    @JsonProperty("Confirmed")
     private int confirmed;
+
+    @JsonProperty("Deaths")
     private int deaths;
+
+    @JsonProperty("Recovered")
     private int recovered;
+
+    @JsonProperty("Active")
     private int active;
+
+    @JsonProperty("Date")
     private String date;
 
     public String getCountry() {
@@ -64,5 +92,18 @@ public class CovidCountryResponse {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "CovidCountryResponse{" +
+                "country='" + country + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", confirmed=" + confirmed +
+                ", deaths=" + deaths +
+                ", recovered=" + recovered +
+                ", active=" + active +
+                ", date='" + date + '\'' +
+                '}';
     }
 }

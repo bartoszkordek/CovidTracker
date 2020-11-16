@@ -1,2 +1,2 @@
-# JobOfferAggregator
-Adding first JobListenerMicroService
+# CovidTracker
+Project of Covid Tracker system based on microservice architecture

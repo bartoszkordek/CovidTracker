@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface Covid19ApiComServiceClient {
 
     //make a call to another microservice
-    @GetMapping("/country/{country}")
+    @GetMapping("/country/{country}/today")
     CovidCountryResponse getCountryInfo(@PathVariable("country") String countryName);
 }

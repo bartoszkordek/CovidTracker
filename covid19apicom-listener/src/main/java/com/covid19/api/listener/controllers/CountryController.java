@@ -34,25 +34,17 @@ public class CountryController {
     }
 
     @GetMapping(
-            value = "/{country}",
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XHTML_XML_VALUE}
-            )
-    public ResponseEntity<CovidCountryResponse> status(@PathVariable("country") String country){
-
-        CovidCountryResponse covid=new CovidCountryResponse();
-        covid.setCountry(country);
-        covid.setActive(1000);
-
-        return ResponseEntity.status(HttpStatus.OK).body(covid);
-    }
-
-    @GetMapping(
-            value = "/test",
+            value = "/{country}/today",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XHTML_XML_VALUE}
     )
-    public ResponseEntity<CovidCountryResponse> getSampleEmployee(){
+    public ResponseEntity<CovidCountryResponse> getCountryData(@PathVariable("country") String country){
 
-        String url=environment.getProperty("microservice.listen.api");
+        StringBuilder strBuilder=new StringBuilder();
+        strBuilder.append(environment.getProperty("microservice.listen.api"));
+        strBuilder.append("/dayone/country/");
+        strBuilder.append(country.toLowerCase());
+
+        String url=strBuilder.toString();
 
         ResponseEntity<CovidCountryResponse[]> response=restTemplate
                 .getForEntity(url,CovidCountryResponse[].class);

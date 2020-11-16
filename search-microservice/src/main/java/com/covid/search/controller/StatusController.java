@@ -1,5 +1,10 @@
 package com.covid.search.controller;
 
+import com.covid.search.model.RecoveredResponse;
+import com.covid.search.service.CountryServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,6 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("status")
 public class StatusController {
+
+    private final CountryServiceImpl countryService;
+
+    @Autowired
+    public StatusController(CountryServiceImpl countryService) {
+        this.countryService = countryService;
+    }
 
     @GetMapping("/confirmed")
     public String getConfirmed(){
@@ -19,8 +31,13 @@ public class StatusController {
     }
 
     @GetMapping("/recovered")
-    public String getRecovered(){
-        return "0 recovered";
+    public ResponseEntity<RecoveredResponse> getRecovered(){
+
+        String testCountery="Poland";
+
+        RecoveredResponse response=countryService.getDataByCountry(testCountery);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/active")

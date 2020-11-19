@@ -3,10 +3,14 @@ package com.project.aggregator.api.useraccountservice.ui.controller;
 import com.project.aggregator.api.useraccountservice.service.UserService;
 import com.project.aggregator.api.useraccountservice.shared.UserDTO;
 import com.project.aggregator.api.useraccountservice.ui.model.CreateUserRequest;
+import com.project.aggregator.api.useraccountservice.ui.model.CreateUserResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,16 +33,22 @@ public class UserController {
         return "Working "+environment.getProperty("local.server.port");
     }
 
-    @PostMapping
-    public String createUser(@Valid @RequestBody CreateUserRequest createUserRequest){
+    @PostMapping(
+            consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest){
 
         ModelMapper modelMapper=new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        UserDTO userDTO=modelMapper.map(createUserRequest,UserDTO.class);
+        UserDTO userDTORequest=modelMapper.map(createUserRequest,UserDTO.class);
 
-        userService.createUser(userDTO);
+        UserDTO userDTOResponse=userService.createUser(userDTORequest);
 
-        return createUserRequest.toString();
+        CreateUserResponse createUserResponse=modelMapper
+                .map(userDTOResponse,CreateUserResponse.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponse);
     }
 }

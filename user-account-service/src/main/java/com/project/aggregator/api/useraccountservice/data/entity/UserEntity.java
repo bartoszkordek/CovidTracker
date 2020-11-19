@@ -20,10 +20,10 @@ public class UserEntity implements Serializable {
     @Column(nullable = false, length = 120, name = "email", unique = true)
     private String email;
 
-    @Column(nullable = false, length = 50, name = "password")
+    @Column(nullable = false, name = "password")
     private String encryptedPassword;
 
-    @Column(nullable = false, length = 50, name = "userID",unique = true)
+    @Column(nullable = false, name = "userID",unique = true)
     private String userId;
 
     public long getId() {

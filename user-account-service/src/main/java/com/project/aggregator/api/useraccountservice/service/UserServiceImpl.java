@@ -6,6 +6,7 @@ import com.project.aggregator.api.useraccountservice.shared.UserDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -14,16 +15,20 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService{
 
     private UserDAO userDAO;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO,BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDAO = userDAO;
+        this.bCryptPasswordEncoder=bCryptPasswordEncoder;
     }
 
     @Override
     public UserDTO createUser(UserDTO userDetails) {
 
-        userDetails.setEncryptedPassword("test");
+        userDetails.setEncryptedPassword(
+                bCryptPasswordEncoder.encode(userDetails.getPassword())
+        );
         userDetails.setUserId(UUID.randomUUID().toString());
 
         ModelMapper modelMapper=new ModelMapper();

@@ -1,6 +1,8 @@
 package com.project.aggregator.api.useraccountservice.shared;
 
-public class UserDTO {
+import java.io.Serializable;
+
+public class UserDTO implements Serializable {
 
     private String name;
     private String surname;

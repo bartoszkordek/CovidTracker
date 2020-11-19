@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableWebSecurity
 public class UserAccountServiceApplication {
 
 	public static void main(String[] args) {

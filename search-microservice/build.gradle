@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':covid19apicom-listener')
+    implementation('org.springframework.boot:spring-boot-starter-web:2.3.5.RELEASE')
+    implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.2.5.RELEASE')
+    implementation('org.springframework.cloud:spring-cloud-starter-openfeign:2.2.5.RELEASE')
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test:2.2.6.RELEASE')
+}
+
+

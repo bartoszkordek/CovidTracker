@@ -29,7 +29,7 @@ class Covid19apicomListenerApplicationTests {
 	@Test
 	void apiShouldReturn200OkStatus(){
 
-		String url=environment.getProperty("microservice.listen.api");
+		String url=environment.getProperty("microservice.listen.api") + "/dayone/country/germany";
 
 		ResponseEntity<CovidCountryResponse[]> response=restTemplate
 				.getForEntity(url,CovidCountryResponse[].class);

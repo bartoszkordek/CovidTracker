@@ -54,7 +54,7 @@ public class CountryController {
         CovidCountryResponse[] countries=mapper
                 .convertValue(response.getBody(),CovidCountryResponse[].class);
 
-        CovidCountryResponse returnValue=countries[0];
+        CovidCountryResponse returnValue=countries[countries.length-1];
 
         System.out.println(returnValue);
 

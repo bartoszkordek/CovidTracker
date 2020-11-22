@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.3.5.RELEASE'
+    id 'com.bmuschko.docker-spring-boot-application' version '6.6.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:11-jdk-slim'
+        ports = [8010]
+        images = ["discovery-service:${version}"]
+    }
+}
+
+dependencies {
+    implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:2.2.5.RELEASE') {
+        exclude group: 'javax.servlet', module: 'servlet-api'
+    }
+    implementation('com.google.code.gson:gson:2.8.2')
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test:2.3.5.RELEASE')
+}

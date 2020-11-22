@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class AuthenticationFilter extends BasicAuthenticationFilter {
 
-    private Environment environment;
+    private final Environment environment;
 
     @Autowired
     public AuthenticationFilter(AuthenticationManager authenticationManager, Environment environment) {

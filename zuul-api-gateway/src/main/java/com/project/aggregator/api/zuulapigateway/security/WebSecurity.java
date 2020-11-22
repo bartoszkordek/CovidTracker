@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,7 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private Environment environment;
+    private final Environment environment;
 
     @Autowired
     public WebSecurity(Environment environment) {
@@ -33,7 +32,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(environment.getProperty("service.account.url.h2console")).permitAll()
                 .antMatchers(environment.getProperty("service.local-covid-data-service.url")).permitAll()
                 .antMatchers(environment.getProperty("service.covid19-tracking-narrativa-service")).permitAll()
-                .antMatchers(environment.getProperty("service.search.url")).authenticated()
+                .antMatchers(environment.getProperty("service.search.url")).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager(), environment));

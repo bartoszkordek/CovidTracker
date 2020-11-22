@@ -32,7 +32,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(environment.getProperty("service.account.url.h2console")).permitAll()
                 .antMatchers(environment.getProperty("service.local-covid-data-service.url")).permitAll()
                 .antMatchers(environment.getProperty("service.covid19-tracking-narrativa-service")).permitAll()
-                .antMatchers(environment.getProperty("service.search.url")).permitAll()
+                .antMatchers(environment.getProperty("service.search.url")).authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager(), environment));

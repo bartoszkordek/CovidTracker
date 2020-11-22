@@ -1,6 +1,6 @@
 rootProject.name = 'CovidTracker'
 
-include 'covid19-tracking-narrativa-servoce'
+include 'covid19-tracking-narrativa-service'
 include 'covid19apicom-listener'
 include 'discovery-service'
 include 'local-covid-data-service'

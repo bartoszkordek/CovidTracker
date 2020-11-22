@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.3.5.RELEASE'
+    id 'com.bmuschko.docker-spring-boot-application' version '6.6.1'
 }
 
 test {
@@ -9,6 +11,14 @@ test {
 repositories {
     jcenter()
     mavenCentral()
+}
+
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:11-jdk-slim'
+        ports = [8011]
+        images = ["zuul-api-gateway:${version}"]
+    }
 }
 
 dependencies {

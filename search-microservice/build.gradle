@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.3.5.RELEASE'
+    id 'com.bmuschko.docker-spring-boot-application' version '6.6.1'
 }
 
 test {
@@ -11,11 +13,19 @@ repositories {
     mavenCentral()
 }
 
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:11-jdk-slim'
+        ports = [0]
+        images = ["search-microservice:${version}"]
+    }
+}
+
 dependencies {
-    compile project(':covid19apicom-listener')
     implementation('org.springframework.boot:spring-boot-starter-web:2.3.5.RELEASE')
     implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.2.5.RELEASE')
     implementation('org.springframework.cloud:spring-cloud-starter-openfeign:2.2.5.RELEASE')
+    implementation('com.google.code.gson:gson:2.8.2')
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.2.6.RELEASE')
 }

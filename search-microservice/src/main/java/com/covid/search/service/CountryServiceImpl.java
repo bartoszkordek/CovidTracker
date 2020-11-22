@@ -1,8 +1,8 @@
 package com.covid.search.service;
 
 import com.covid.search.data.Covid19ApiComServiceClient;
+import com.covid.search.model.CovidCountryResponse;
 import com.covid.search.model.RecoveredResponse;
-import com.covid19.api.listener.model.CovidCountryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,7 @@
+plugins {
+    id 'com.avast.gradle.docker-compose' version "0.13.4"
+}
+
 allprojects {
     group 'com.project.aggregator.api'
-    version '0.0.1-SNAPSHOT'
 }

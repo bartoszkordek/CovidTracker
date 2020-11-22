@@ -1,6 +1,6 @@
 package com.covid.search.data;
 
-import com.covid19.api.listener.model.CovidCountryResponse;
+import com.covid.search.model.CovidCountryResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

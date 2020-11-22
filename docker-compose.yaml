@@ -1,0 +1,50 @@
+version: '3'
+
+networks:
+  covid:
+
+services:
+  discovery-service:
+    image: discovery-service:0.0.1-SNAPSHOT
+    ports:
+      - "8010:8010"
+    networks:
+      - covid
+
+  zuul-api-gateway:
+    image: zuul-api-gateway:0.0.1-SNAPSHOT
+    ports:
+      - "8011:8011"
+    depends_on:
+      - discovery-service
+    networks:
+      - covid
+
+  user-account-service:
+    image: user-account-service:0.0.1-SNAPSHOT
+    depends_on:
+      - zuul-api-gateway
+    networks:
+      - covid
+
+  search-microservice:
+    image: search-microservice:0.0.1-SNAPSHOT
+    depends_on:
+      - zuul-api-gateway
+    networks:
+      - covid
+
+  covid19apicom-listener:
+    image: covid19apicom-listener:0.0.1-SNAPSHOT
+    depends_on:
+      - zuul-api-gateway
+    networks:
+      - covid
+
+  covid19-tracking-narrativa-service:
+    image: covid19-tracking-narrativa-service:0.0.1-SNAPSHOT
+    depends_on:
+      - zuul-api-gateway
+    networks:
+      - covid
+

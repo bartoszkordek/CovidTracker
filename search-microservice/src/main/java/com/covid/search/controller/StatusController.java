@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("poland/today")
+@RequestMapping("poland")
 public class StatusController {
 
     private final CountryServiceImpl countryService;

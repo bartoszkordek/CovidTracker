@@ -1,6 +1,7 @@
 # CovidTracker
 Project of Covid Tracker system based on microservice architecture
 
+Project was built and tested using Java 11.
 
 ## Steps to run
 (for Windows substitute `./gradlew` with `gradlew.bat`)
@@ -24,7 +25,7 @@ After playing, clean up after yourself with
 ./gradlew composeDown
 ```
 
-If you're in a hurry, try
+If you're in a hurry, try instead
 ```shell script
 docker rm -f $(docker ps -aq)
 ```

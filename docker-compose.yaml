@@ -27,6 +27,13 @@ services:
     networks:
       - covid
 
+  user-account-service-backup:
+    image: user-account-service:0.0.1-SNAPSHOT
+    depends_on:
+      - zuul-api-gateway
+    networks:
+      - covid
+
   search-microservice:
     image: search-microservice:0.0.1-SNAPSHOT
     depends_on:

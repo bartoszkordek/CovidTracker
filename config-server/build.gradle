@@ -1,0 +1,33 @@
+plugins{
+	id 'java'
+	id 'org.springframework.boot' version '2.3.5.RELEASE'
+	id 'com.bmuschko.docker-spring-boot-application' version '6.6.1'
+}
+
+group = 'covid-trackers'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+test {
+	useJUnitPlatform()
+}
+
+docker {
+	springBootApplication {
+		baseImage = 'openjdk:11-jdk-slim'
+		ports = [8088]
+		images = ["config-server:${version}"]
+	}
+}
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.cloud:spring-cloud-config-server:2.2.6.RELEASE'
+	testImplementation('org.springframework.boot:spring-boot-starter-test:2.3.5.RELEASE')
+}
+
+

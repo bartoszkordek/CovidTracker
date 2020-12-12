@@ -55,3 +55,9 @@ services:
     networks:
       - covid
 
+  config-server:
+    image: config-server:0.0.1-SNAPSHOT
+    depends_on:
+      - zuul-api-gateway
+    networks:
+      - covid

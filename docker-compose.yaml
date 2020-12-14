@@ -20,44 +20,55 @@ services:
     networks:
       - covid
 
+  config-server:
+    image: config-server:0.0.1-SNAPSHOT
+    ports:
+      - "8012:8012"
+    depends_on:
+      - zuul-api-gateway
+    networks:
+      - covid
+
   user-account-service:
     image: user-account-service:0.0.1-SNAPSHOT
     depends_on:
-      - zuul-api-gateway
+      - config-server
     networks:
       - covid
 
   user-account-service-backup:
     image: user-account-service:0.0.1-SNAPSHOT
     depends_on:
-      - zuul-api-gateway
+      - config-server
     networks:
       - covid
 
   search-microservice:
     image: search-microservice:0.0.1-SNAPSHOT
     depends_on:
-      - zuul-api-gateway
+      - config-server
     networks:
       - covid
 
   covid19apicom-listener:
     image: covid19apicom-listener:0.0.1-SNAPSHOT
     depends_on:
-      - zuul-api-gateway
+      - config-server
     networks:
       - covid
 
   covid19-tracking-narrativa-service:
     image: covid19-tracking-narrativa-service:0.0.1-SNAPSHOT
     depends_on:
-      - zuul-api-gateway
+      - config-server
     networks:
       - covid
 
-  config-server:
-    image: config-server:0.0.1-SNAPSHOT
-    depends_on:
-      - zuul-api-gateway
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+#      - 5671:5671
     networks:
       - covid

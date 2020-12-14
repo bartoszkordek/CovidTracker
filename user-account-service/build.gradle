@@ -34,6 +34,7 @@ dependencies {
     implementation('com.h2database:h2:1.4.200')
     implementation('org.springframework.cloud:spring-cloud-starter-config')
     implementation('org.springframework.cloud:spring-cloud-starter-bus-amqp')
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.2.6.RELEASE')
 }

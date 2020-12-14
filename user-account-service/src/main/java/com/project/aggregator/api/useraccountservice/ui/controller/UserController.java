@@ -33,6 +33,11 @@ public class UserController {
         return "Working "+environment.getProperty("local.server.port");
     }
 
+    @GetMapping("/status/check/git")
+    public String statusGit(){
+        return "Say hi from github: "+environment.getProperty("git.hello");
+    }
+
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}

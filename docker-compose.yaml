@@ -72,3 +72,10 @@ services:
 #      - 5671:5671
     networks:
       - covid
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+    networks:
+      - covid

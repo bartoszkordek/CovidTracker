@@ -23,3 +23,6 @@ target/
 # build
 build
 out
+
+#logs
+logs

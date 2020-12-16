@@ -2,12 +2,15 @@ version: '3'
 
 networks:
   covid:
+    driver: bridge
 
 services:
   discovery-service:
     image: discovery-service:0.0.1-SNAPSHOT
     ports:
       - "8010:8010"
+    volumes:
+      - ./logs/:/logs/
     networks:
       - covid
 
@@ -17,6 +20,8 @@ services:
       - "8011:8011"
     depends_on:
       - discovery-service
+    volumes:
+      - ./logs/:/logs/
     networks:
       - covid
 
@@ -26,6 +31,8 @@ services:
       - "8012:8012"
     depends_on:
       - zuul-api-gateway
+    volumes:
+      - ./logs/:/logs/
     networks:
       - covid
 
@@ -33,6 +40,8 @@ services:
     image: user-account-service:0.0.1-SNAPSHOT
     depends_on:
       - config-server
+    volumes:
+      - ./logs/:/logs/
     networks:
       - covid
 
@@ -40,6 +49,8 @@ services:
     image: user-account-service:0.0.1-SNAPSHOT
     depends_on:
       - config-server
+    volumes:
+      - ./logs/:/logs/
     networks:
       - covid
 
@@ -47,6 +58,8 @@ services:
     image: search-microservice:0.0.1-SNAPSHOT
     depends_on:
       - config-server
+    volumes:
+      - ./logs/:/logs/
     networks:
       - covid
 
@@ -54,6 +67,8 @@ services:
     image: covid19apicom-listener:0.0.1-SNAPSHOT
     depends_on:
       - config-server
+    volumes:
+      - ./logs/:/logs/
     networks:
       - covid
 
@@ -61,6 +76,8 @@ services:
     image: covid19-tracking-narrativa-service:0.0.1-SNAPSHOT
     depends_on:
       - config-server
+    volumes:
+      - ./logs/:/logs/
     networks:
       - covid
 
@@ -79,3 +96,36 @@ services:
       - 9411:9411
     networks:
       - covid
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - ./logs/:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+    networks:
+      - covid
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.1
+    ports:
+      - 9600:9600
+    volumes:
+      - ./elk/logstash/config/:/usr/share/logstash/pipeline/
+      - ./logs/:/logs/
+    networks:
+      - covid
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    ports:
+      - 5601:5601
+    networks:
+      - covid
+    depends_on:
+      - elasticsearch

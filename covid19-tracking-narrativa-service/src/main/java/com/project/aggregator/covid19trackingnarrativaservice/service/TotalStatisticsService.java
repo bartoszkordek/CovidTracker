@@ -2,10 +2,13 @@ package com.project.aggregator.covid19trackingnarrativaservice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.aggregator.covid19trackingnarrativaservice.exception.FromDateAfterToDateException;
 import com.project.aggregator.covid19trackingnarrativaservice.exception.FutureDateException;
 import com.project.aggregator.covid19trackingnarrativaservice.exception.NoFoundException;
 import com.project.aggregator.covid19trackingnarrativaservice.model.TodayStatisticsModel;
 import com.project.aggregator.covid19trackingnarrativaservice.pojo.TotalRoot;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,12 +19,16 @@ import org.springframework.web.client.RestTemplate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TotalStatisticsService {
 
+    @Autowired
+    private Environment environment;
+
     public TodayStatisticsModel getTodayTotal() throws JsonProcessingException, NoFoundException {
-//int
+
         long currentDate = System.currentTimeMillis();
         SimpleDateFormat currentDateFormat =  new SimpleDateFormat("yyyy-MM-dd");
         String currentDateFormatted = currentDateFormat.format(currentDate);
@@ -113,4 +120,156 @@ public class TotalStatisticsService {
                 return todayStatisticsModel;
         }
     }
+
+    public int getCountryTotal(String country, String from, String to) throws JsonProcessingException, ParseException, FromDateAfterToDateException, FutureDateException {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date(System.currentTimeMillis());
+        String currentDateFormatted = format.format( currentDate );
+        RestTemplate restTemplate = new RestTemplate();
+
+        if(from==null || to==null ){
+            StringBuilder url = new StringBuilder();
+            url.append(environment.getProperty("microservice.listen.api"))
+                    .append(currentDateFormatted)
+                    .append("/country/")
+                    .append(country);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Connection", "keep-alive");
+            HttpEntity<String> entity = new HttpEntity<String>(headers);
+            ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.GET, entity, String.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            TotalRoot root = objectMapper.readValue(response.getBody(), TotalRoot.class);
+
+            int todayTotal = root.getDates().getCurrentDate().getCountries().getPoland().getTodayConfirmed();
+
+            return todayTotal;
+
+        } else{
+
+            Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(from);
+            Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(to);
+
+            long diffInMilliesFromTo = toDate.getTime() - fromDate.getTime();
+            long datesDiffFromTo = TimeUnit.DAYS.convert(diffInMilliesFromTo, TimeUnit.MILLISECONDS);
+            if(datesDiffFromTo<0) throw new FromDateAfterToDateException("From date after to date");
+
+            long diffInMilliesFromCurrent = currentDate.getTime() - fromDate.getTime();
+            long datesDiffFromCurrent = TimeUnit.DAYS.convert(diffInMilliesFromCurrent, TimeUnit.MILLISECONDS);
+            if(datesDiffFromCurrent<0) throw new FutureDateException("From date after current date");
+
+            long diffInMilliesCurrentTo =  currentDate.getTime() - toDate.getTime();
+            long datesDiffFromCurrentTo = TimeUnit.DAYS.convert(diffInMilliesCurrentTo, TimeUnit.MILLISECONDS);
+            if(datesDiffFromCurrentTo<0) throw new FutureDateException("To date after current date");
+
+            StringBuilder fromUrl = new StringBuilder();
+            fromUrl.append(environment.getProperty("microservice.listen.api"))
+                    .append(from)
+                    .append("/country/")
+                    .append(country);
+
+            HttpHeaders fromHeaders = new HttpHeaders();
+            fromHeaders.set("Connection", "keep-alive");
+            HttpEntity<String> fromEntity = new HttpEntity<String>(fromHeaders);
+            ResponseEntity<String> fromResponse = restTemplate.exchange(fromUrl.toString(), HttpMethod.GET, fromEntity, String.class);
+            ObjectMapper fromObjectMapper = new ObjectMapper();
+            TotalRoot fromRoot = fromObjectMapper.readValue(fromResponse.getBody(), TotalRoot.class);
+
+            int fromResult = fromRoot.getDates().getCurrentDate().getCountries().getPoland().getTodayConfirmed();
+
+            StringBuilder toUrl = new StringBuilder();
+            toUrl.append(environment.getProperty("microservice.listen.api"))
+                    .append(to)
+                    .append("/country/")
+                    .append(country);
+
+            HttpHeaders toHeaders = new HttpHeaders();
+            fromHeaders.set("Connection", "keep-alive");
+            HttpEntity<String> toEntity = new HttpEntity<String>(toHeaders);
+            ResponseEntity<String> toResponse = restTemplate.exchange(toUrl.toString(), HttpMethod.GET, toEntity, String.class);
+            ObjectMapper toObjectMapper = new ObjectMapper();
+            TotalRoot toRoot = toObjectMapper.readValue(toResponse.getBody(), TotalRoot.class);
+
+            int toResult = toRoot.getDates().getCurrentDate().getCountries().getPoland().getTodayConfirmed();
+
+            return toResult-fromResult;
+        }
+    }
+
+    public int getCountryDeaths(String country, String from, String to) throws JsonProcessingException, FromDateAfterToDateException, ParseException, FutureDateException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date(System.currentTimeMillis());
+        String currentDateFormatted = format.format(currentDate);
+        RestTemplate restTemplate = new RestTemplate();
+
+        if (from == null || to == null) {
+            StringBuilder url = new StringBuilder();
+            url.append(environment.getProperty("microservice.listen.api"))
+                    .append(currentDateFormatted)
+                    .append("/country/")
+                    .append(country);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Connection", "keep-alive");
+            HttpEntity<String> entity = new HttpEntity<String>(headers);
+            ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.GET, entity, String.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            TotalRoot root = objectMapper.readValue(response.getBody(), TotalRoot.class);
+
+            int todayTotal = root.getDates().getCurrentDate().getCountries().getPoland().getTodayDeaths();
+
+            return todayTotal;
+
+        } else {
+
+            Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(from);
+            Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(to);
+
+            long diffInMilliesFromTo = toDate.getTime() - fromDate.getTime();
+            long datesDiffFromTo = TimeUnit.DAYS.convert(diffInMilliesFromTo, TimeUnit.MILLISECONDS);
+            if (datesDiffFromTo < 0) throw new FromDateAfterToDateException("From date after to date");
+
+            long diffInMilliesFromCurrent = currentDate.getTime() - fromDate.getTime();
+            long datesDiffFromCurrent = TimeUnit.DAYS.convert(diffInMilliesFromCurrent, TimeUnit.MILLISECONDS);
+            if(datesDiffFromCurrent<0) throw new FutureDateException("From date after current date");
+
+            long diffInMilliesCurrentTo =  currentDate.getTime() - toDate.getTime();
+            long datesDiffFromCurrentTo = TimeUnit.DAYS.convert(diffInMilliesCurrentTo, TimeUnit.MILLISECONDS);
+            if(datesDiffFromCurrentTo<0) throw new FutureDateException("To date after current date");
+
+            StringBuilder fromUrl = new StringBuilder();
+            fromUrl.append(environment.getProperty("microservice.listen.api"))
+                    .append(from)
+                    .append("/country/")
+                    .append(country);
+
+            HttpHeaders fromHeaders = new HttpHeaders();
+            fromHeaders.set("Connection", "keep-alive");
+            HttpEntity<String> fromEntity = new HttpEntity<String>(fromHeaders);
+            ResponseEntity<String> fromResponse = restTemplate.exchange(fromUrl.toString(), HttpMethod.GET, fromEntity, String.class);
+            ObjectMapper fromObjectMapper = new ObjectMapper();
+            TotalRoot fromRoot = fromObjectMapper.readValue(fromResponse.getBody(), TotalRoot.class);
+
+            int fromResult = fromRoot.getDates().getCurrentDate().getCountries().getPoland().getTodayDeaths();
+
+            StringBuilder toUrl = new StringBuilder();
+            toUrl.append(environment.getProperty("microservice.listen.api"))
+                    .append(to)
+                    .append("/country/")
+                    .append(country);
+
+            HttpHeaders toHeaders = new HttpHeaders();
+            fromHeaders.set("Connection", "keep-alive");
+            HttpEntity<String> toEntity = new HttpEntity<String>(toHeaders);
+            ResponseEntity<String> toResponse = restTemplate.exchange(toUrl.toString(), HttpMethod.GET, toEntity, String.class);
+            ObjectMapper toObjectMapper = new ObjectMapper();
+            TotalRoot toRoot = toObjectMapper.readValue(toResponse.getBody(), TotalRoot.class);
+
+            int toResult = toRoot.getDates().getCurrentDate().getCountries().getPoland().getTodayDeaths();
+
+            return toResult - fromResult;
+        }
+    }
+
 }

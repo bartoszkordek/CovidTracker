@@ -5,12 +5,10 @@ import com.covid.search.service.CountryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("poland")
+@RequestMapping("/search")
 public class StatusController {
 
     private final CountryServiceImpl countryService;
@@ -21,9 +19,7 @@ public class StatusController {
     }
 
     @GetMapping("/confirmed")
-    public String getConfirmed(){
-        return "0 confirmed";
-    }
+    public String getConfirmed(){ return "0 confirmed";}
 
     @GetMapping("/deaths")
     public String getDeaths(){
@@ -43,5 +39,25 @@ public class StatusController {
     @GetMapping("/active")
     public String getActive(){
         return "0 active";
+    }
+
+    @GetMapping("/{country}/total")
+    public ResponseEntity<Integer> getTotalCountry(@PathVariable("country") String countryName,
+                                                   @RequestParam(required = false) final String from,
+                                                   @RequestParam(required = false) final String to){
+
+        int response = countryService.getCountryTotal(countryName, from, to);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/{country}/deaths")
+    public ResponseEntity<Integer> getDeathsCountry(@PathVariable("country") String countryName,
+                                                   @RequestParam(required = false) final String from,
+                                                   @RequestParam(required = false) final String to){
+
+        int response = countryService.getCountryDeaths(countryName, from, to);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

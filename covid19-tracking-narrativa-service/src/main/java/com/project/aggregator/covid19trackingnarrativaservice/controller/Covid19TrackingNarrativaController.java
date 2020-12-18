@@ -1,6 +1,7 @@
 package com.project.aggregator.covid19trackingnarrativaservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.project.aggregator.covid19trackingnarrativaservice.exception.FromDateAfterToDateException;
 import com.project.aggregator.covid19trackingnarrativaservice.exception.FutureDateException;
 import com.project.aggregator.covid19trackingnarrativaservice.exception.NoFoundException;
 import com.project.aggregator.covid19trackingnarrativaservice.exception.RestException;
@@ -9,15 +10,12 @@ import com.project.aggregator.covid19trackingnarrativaservice.service.TotalStati
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("/results")
+@RequestMapping("/search")
 public class Covid19TrackingNarrativaController {
 
     private TotalStatisticsService totalStatisticsService;
@@ -61,6 +59,28 @@ public class Covid19TrackingNarrativaController {
         try{
             return totalStatisticsService.getCountryDate(country, date);
         } catch (FutureDateException | ParseException e){
+            throw new RestException(e.getMessage(), HttpStatus.BAD_REQUEST, e);
+        }
+    }
+
+    @GetMapping("/{country}/total")
+    public int getCountryTotal(@PathVariable("country") final String country,
+                               @RequestParam(required = false) final String from,
+                               @RequestParam(required = false) final String to) throws JsonProcessingException, ParseException, FromDateAfterToDateException, FutureDateException, RestException {
+        try {
+            return totalStatisticsService.getCountryTotal(country, from, to);
+        } catch (FromDateAfterToDateException | FutureDateException e){
+            throw new RestException(e.getMessage(), HttpStatus.BAD_REQUEST, e);
+        }
+    }
+
+    @GetMapping("/{country}/deaths")
+    public int getCountryDeaths(@PathVariable("country") String country,
+                               @RequestParam(required = false) final String from,
+                               @RequestParam(required = false) final String to) throws JsonProcessingException, ParseException, FromDateAfterToDateException, FutureDateException, RestException {
+        try {
+            return totalStatisticsService.getCountryDeaths(country, from, to);
+        } catch (FromDateAfterToDateException | FutureDateException e){
             throw new RestException(e.getMessage(), HttpStatus.BAD_REQUEST, e);
         }
     }

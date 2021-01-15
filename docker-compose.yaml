@@ -81,6 +81,15 @@ services:
     networks:
       - covid
 
+  local-covid-data-service:
+    image: local-covid-data-service:0.0.1-SNAPSHOT
+    depends_on:
+      - config-server
+    volumes:
+      - ./logs/:/logs/
+    networks:
+      - covid
+
   rabbitmq:
     image: rabbitmq:3.8-management
     ports:

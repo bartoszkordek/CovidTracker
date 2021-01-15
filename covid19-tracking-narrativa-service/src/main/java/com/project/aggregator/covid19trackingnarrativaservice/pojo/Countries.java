@@ -1,9 +1,9 @@
 package com.project.aggregator.covid19trackingnarrativaservice.pojo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 public class Countries{
-    @JsonProperty("Poland")
+    @JsonAlias({"Poland", "Germany", "France", "China", "Spain", "United Kingdom", "US"})
     private Poland poland;
 
     public Poland getPoland() {

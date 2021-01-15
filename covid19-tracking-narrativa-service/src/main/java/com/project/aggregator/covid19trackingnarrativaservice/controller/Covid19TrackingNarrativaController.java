@@ -5,6 +5,7 @@ import com.project.aggregator.covid19trackingnarrativaservice.exception.FromDate
 import com.project.aggregator.covid19trackingnarrativaservice.exception.FutureDateException;
 import com.project.aggregator.covid19trackingnarrativaservice.exception.NoFoundException;
 import com.project.aggregator.covid19trackingnarrativaservice.exception.RestException;
+import com.project.aggregator.covid19trackingnarrativaservice.model.DailyStatisticsModel;
 import com.project.aggregator.covid19trackingnarrativaservice.model.TodayStatisticsModel;
 import com.project.aggregator.covid19trackingnarrativaservice.service.TotalStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class Covid19TrackingNarrativaController {
     }
 
     @GetMapping("/{country}/deaths")
-    public int getCountryDeaths(@PathVariable("country") String country,
+    public int getCountryDeaths(@PathVariable("country") final String country,
                                @RequestParam(required = false) final String from,
                                @RequestParam(required = false) final String to) throws JsonProcessingException, ParseException, FromDateAfterToDateException, FutureDateException, RestException {
         try {
@@ -85,4 +86,24 @@ public class Covid19TrackingNarrativaController {
         }
     }
 
+    @GetMapping("/{country}/recovered")
+    public int getCountryRecovered(@PathVariable("country") final String country,
+                                @RequestParam(required = false) final String from,
+                                @RequestParam(required = false) final String to) throws JsonProcessingException, ParseException, FromDateAfterToDateException, FutureDateException, RestException {
+        try {
+            return totalStatisticsService.getCountryRecovered(country, from, to);
+        } catch (FromDateAfterToDateException | FutureDateException e){
+            throw new RestException(e.getMessage(), HttpStatus.BAD_REQUEST, e);
+        }
+    }
+
+    @GetMapping("{country}")
+    public DailyStatisticsModel getDailyStatistics(@PathVariable("country") final String country,
+                                                   @RequestParam(required = true) final String date) throws JsonProcessingException, RestException {
+        try{
+            return totalStatisticsService.getDailyStatistics(country, date);
+        } catch (NoFoundException e){
+            throw new RestException(e.getMessage(), HttpStatus.BAD_REQUEST, e);
+        }
+    }
 }

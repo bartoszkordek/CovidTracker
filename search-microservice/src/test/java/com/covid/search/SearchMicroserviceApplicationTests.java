@@ -1,22 +1,21 @@
 package com.covid.search;
 
 import com.google.gson.Gson;
-import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +48,7 @@ class SearchMicroserviceApplicationTests {
 		assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 	}
 
+	@Disabled
 	@Test
 	void shouldReturnOkStatusWhenAuthorized() throws ParseException, JSONException {
 		//given

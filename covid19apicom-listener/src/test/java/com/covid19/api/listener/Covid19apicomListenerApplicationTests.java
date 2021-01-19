@@ -3,13 +3,16 @@ package com.covid19.api.listener;
 import com.covid19.api.listener.model.CovidCountryResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class Covid19apicomListenerApplicationTests {
@@ -27,7 +30,6 @@ class Covid19apicomListenerApplicationTests {
 		mapper=new ObjectMapper();
 	}
 
-	@Disabled
 	@Test
 	void apiShouldReturn200OkStatus(){
 
@@ -41,9 +43,8 @@ class Covid19apicomListenerApplicationTests {
 
 		CovidCountryResponse returnValue=countries[0];
 
-		System.out.println("Status : "+response.getStatusCode());
-		System.out.println(returnValue);
-
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(returnValue);
 	}
 
 }

@@ -50,12 +50,6 @@ public class Total{
 
     @JsonProperty("today_vs_yesterday_recovered")
     private double todayVsYesterdayRecovered;
-    /*
-    public double today_vs_yesterday_confirmed;
-    public double today_vs_yesterday_deaths;
-    public double today_vs_yesterday_open_cases;
-    public double today_vs_yesterday_recovered;
-     */
 
     @JsonProperty("yesterday_confirmed")
     private int yesterdayConfirmed;

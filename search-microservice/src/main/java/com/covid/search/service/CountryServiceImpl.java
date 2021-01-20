@@ -3,11 +3,8 @@ package com.covid.search.service;
 import com.covid.search.data.Covid19ApiComServiceClient;
 import com.covid.search.data.Covid19TrackingNarrativaServiceClient;
 import com.covid.search.data.LocalCovidDataServiceClient;
-import com.covid.search.model.CountryStatisticsResponse;
 import com.covid.search.model.CovidCountryResponse;
-import com.covid.search.model.DailyStatisticsResponse;
 import com.covid.search.model.RecoveredResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,12 +39,7 @@ public class CountryServiceImpl implements CountryService{
 
         return tempResponse;
     }
-/*
-    @Override
-    public String getCountryStatistics(String country) {
-        return localCovidDataServiceClient.getCountryStatistics(country);
-    }
-*/
+
     @Override
     public int getCountryTotal(String country, String from, String to) {
 
@@ -59,8 +51,6 @@ public class CountryServiceImpl implements CountryService{
             int covid19TrackingNarrativaServiceResponse = covid19TrackingNarrativaServiceClient.getTotalCountry(country, from, to);
             return (covid19TrackingNarrativaServiceResponse + localCovidDataServiceResponse)/2;
         }
-
-        //return covid19TrackingNarrativaServiceClient.getTotalCountry(country, from, to);
     }
 
     @Override

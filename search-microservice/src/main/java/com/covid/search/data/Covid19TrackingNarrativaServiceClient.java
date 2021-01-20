@@ -1,7 +1,5 @@
 package com.covid.search.data;
 
-import com.covid.search.model.CovidCountryResponse;
-import com.covid.search.model.DailyStatisticsResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,5 +26,5 @@ public interface Covid19TrackingNarrativaServiceClient {
 
     @GetMapping("/search/{country}")
     String getDailyStatistics(@PathVariable("country") final String countryName,
-                                               @RequestParam(required = true) final String date);
+                              @RequestParam final String date);
 }

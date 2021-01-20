@@ -83,7 +83,7 @@ public class StatusController {
 
     @GetMapping("/{country}")
     public ResponseEntity<String> getDailyStatistics(@PathVariable("country") String countryName,
-                                                       @RequestParam(required = true) final String date){
+                                                     @RequestParam final String date){
 
         String response = countryService.getDailyStatistics(countryName,date);
 

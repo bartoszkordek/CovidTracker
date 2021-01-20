@@ -369,7 +369,7 @@ public class TotalStatisticsService {
         String url = environment.getProperty("microservice.listen.api")+date+"/country/"+country;
         HttpHeaders headers = new HttpHeaders();
         headers.set("Connection","keep-alive");
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
         if(response.getStatusCode().is4xxClientError()){
             throw new NoFoundException("Cannot find response");
@@ -377,14 +377,12 @@ public class TotalStatisticsService {
         else {
             ObjectMapper objectMapper = new ObjectMapper();
             TotalRoot root = objectMapper.readValue(response.getBody(), TotalRoot.class);
-
-            DailyStatisticsModel dailyStatisticsModel = new DailyStatisticsModel(
+            return new DailyStatisticsModel(
                     date,
-                    root.getTotal().getTodayNewConfirmed(),
-                    root.getTotal().getTodayNewDeaths(),
-                    root.getTotal().getTodayNewRecovered()
+                    root.getDates().getCurrentDate().getCountries().getPoland().getTodayNewConfirmed(),
+                    root.getDates().getCurrentDate().getCountries().getPoland().getTodayNewDeaths(),
+                    root.getDates().getCurrentDate().getCountries().getPoland().getTodayNewRecovered()
             );
-            return dailyStatisticsModel;
         }
     }
 }

@@ -45,8 +45,8 @@ services:
     networks:
       - covid
 
-  user-account-service-backup:
-    image: user-account-service:0.0.1-SNAPSHOT
+  search-microservice:
+    image: search-microservice:0.0.1-SNAPSHOT
     depends_on:
       - config-server
     volumes:
@@ -54,7 +54,7 @@ services:
     networks:
       - covid
 
-  search-microservice:
+  search-microservice-backup:
     image: search-microservice:0.0.1-SNAPSHOT
     depends_on:
       - config-server

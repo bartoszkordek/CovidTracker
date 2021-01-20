@@ -1,22 +1,31 @@
 package com.covid.search.controller;
 
-import com.covid.search.model.CountryStatisticsResponse;
 import com.covid.search.model.RecoveredResponse;
 import com.covid.search.service.CountryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@RequestMapping("/search")
 public class StatusController {
 
     private final CountryServiceImpl countryService;
+    private final Environment environment;
 
     @Autowired
-    public StatusController(CountryServiceImpl countryService) {
+    public StatusController(CountryServiceImpl countryService, Environment environment) {
         this.countryService = countryService;
+        this.environment = environment;
+    }
+
+    @GetMapping("/status/check")
+    public String status(){
+        return "Working "+environment.getProperty("local.server.port");
     }
 
     @GetMapping("/confirmed")
@@ -42,13 +51,6 @@ public class StatusController {
         return "0 active";
     }
 
-/*
-    @GetMapping("/{country}")
-    public ResponseEntity<String> getCountryResults(@PathVariable("country") final String countryName){
-        String response = countryService.getCountryStatistics(countryName);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-*/
     @GetMapping("/{country}/total")
     public ResponseEntity<Integer> getTotalCountry(@PathVariable("country") final String countryName,
                                                    @RequestParam(required = false) final String from,

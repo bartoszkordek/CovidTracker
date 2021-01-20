@@ -1,9 +1,6 @@
 package com.covid.search;
 
 import com.google.gson.Gson;
-import net.minidev.json.parser.ParseException;
-import org.json.JSONException;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -48,9 +46,8 @@ class SearchMicroserviceApplicationTests {
 		assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 	}
 
-	@Disabled
 	@Test
-	void shouldReturnOkStatusWhenAuthorized() throws ParseException, JSONException {
+	void shouldReturnOkStatusWhenAuthorized() {
 		//given
 		//create sample user
 		String createSampleUserUrl = "http://localhost:8011/account/users";
@@ -59,11 +56,13 @@ class SearchMicroserviceApplicationTests {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		//create body
+		final String testEmail = new Random().nextInt() + "@wp.pl";
+		final String testPassword = "test12314";
 		Map<String, String> createSampleUserBody = new HashMap<>();
 		createSampleUserBody.put("firstName", "Test");
 		createSampleUserBody.put("lastName", "User");
-		createSampleUserBody.put("password", "test12314");
-		createSampleUserBody.put("email", "w.zacharski8@wp.pl");
+		createSampleUserBody.put("password", testPassword);
+		createSampleUserBody.put("email", testEmail);
 
 		String createSampleUserBodyJsonMap = new Gson().toJson(createSampleUserBody);
 
@@ -79,25 +78,18 @@ class SearchMicroserviceApplicationTests {
 		String loginSampleUserUrl = "http://localhost:8011/account/login";
 		//create body
 		Map<String, String> loginSampleUserBody = new HashMap<>();
-		loginSampleUserBody.put("email", "w.zacharski8@wp.pl");
-		loginSampleUserBody.put("password", "test12314");
-
-		String sampleBody =
-				"{" +
-						"\"email\":\"w.zacharski@wp.pl\"," +
-						"\"password\":\"test12314\"" +
-						"}";
-
+		loginSampleUserBody.put("email", testEmail);
+		loginSampleUserBody.put("password", testPassword);
 		String loginSampleUserBodyJsonMap = new Gson().toJson(loginSampleUserBody);
 
 		final ResponseEntity<Void> loginSampleUserResponse = restTemplate.exchange(
-				loginSampleUserUrl, HttpMethod.POST, new HttpEntity<>(sampleBody, headers), Void.class);
+				loginSampleUserUrl, HttpMethod.POST, new HttpEntity<>(loginSampleUserBodyJsonMap, new HttpHeaders()), Void.class);
 		assertEquals(HttpStatus.OK, loginSampleUserResponse.getStatusCode());
 
 		// when
 		String sampleSearchUrl = "http://localhost:8011/search/POL?date=2021-01-10";
 		String tokenHeaderName = "token";
-		String tokenValue = tokenHeaderName;
+		String tokenValue = loginSampleUserResponse.getHeaders().getFirst(tokenHeaderName);
 		headers.add("Authorization", tokenValue);
 		final ResponseEntity<Void> response = restTemplate.exchange(
 				sampleSearchUrl, HttpMethod.GET, new HttpEntity<>(null, headers), Void.class);

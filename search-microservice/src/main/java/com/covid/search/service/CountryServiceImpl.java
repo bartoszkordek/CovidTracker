@@ -43,7 +43,7 @@ public class CountryServiceImpl implements CountryService{
     @Override
     public int getCountryTotal(String country, String from, String to) {
 
-        if (from == null || to == null) {
+        if (from == null && to == null) {
             int covid19TrackingNarrativaServiceResponse = covid19TrackingNarrativaServiceClient.getTotalCountry(country, from, to);
             return covid19TrackingNarrativaServiceResponse;
         } else {

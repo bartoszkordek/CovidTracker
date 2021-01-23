@@ -64,6 +64,6 @@ public class LocalCovidDataController {
 
     @GetMapping("today/total/test")
     public int getCountryTodayTotalTest() {
-        return  1376389;
+        return  1477579;
     }
 }

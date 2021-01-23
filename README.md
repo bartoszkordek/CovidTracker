@@ -32,6 +32,7 @@ docker stack rm covid-tracker
 1. RabbitMQ: http://localhost:15672 (user: guest, pass: guest)
 1. Kibana: http://localhost:5601
 1. Zipkin: http://localhost:9411
+1. H2-Console http://localhost:8011/account/h2-console/ (H2-Embedded JDBC URL: jdbc:h2:mem:testdb, user: covid, password: covid)
 
 ## Dokumentacja
 Dokumentacja projektu jest dostępna w sekcji [Wiki](https://github.com/bartoszkordek/CovidTracker/wiki).

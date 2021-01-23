@@ -36,7 +36,6 @@ public class LocalCovidDataController {
         return "Working "+environment.getProperty("local.server.port");
     }
 
-
     @GetMapping("/yesterday")
     public StatisticsModel getYesterdayStatistics(@RequestParam("country") final String country) throws IOException, NoSuchAlgorithmException, KeyManagementException {
         return localStatisticsService.getYesterdayStatistics(country);

@@ -16,8 +16,4 @@ public class Covid19apicomListenerApplication {
 		SpringApplication.run(Covid19apicomListenerApplication.class, args);
 	}
 
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder){
-		return builder.build();
-	}
 }

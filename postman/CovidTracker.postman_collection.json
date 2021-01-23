@@ -1,0 +1,391 @@
+{
+	"info": {
+		"_postman_id": "8a8fcebf-6e09-49fd-899e-9daff3190e32",
+		"name": "CovidTracker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"Grzegorz\",\r\n    \"lastName\": \"Zacharski\",\r\n    \"password\": \"test12314\",\r\n    \"email\": \"w.zacharski@wp.pl\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8011/account/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"account",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"w.zacharski@wp.pl\",\r\n    \"password\": \"test12314\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8011/account/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"account",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhMGViNzcyMS00NTk3LTRiMDItYmFhYS03ODgzNjMxMDIwYzEiLCJleHAiOjE2MTE0MzU2NzF9.JLRocvzykRyG6DN-uRjslg_b-QKjmXLm6EVtW5M7oDAsUnlmftOw6pgRkn8_ocB9ct_6PT4FE0PXvv9dqxGGBQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8011/search/POL?date=2021-01-07",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"search",
+						"POL"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2021-01-07"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Return recovered from date to date from POL",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhMGViNzcyMS00NTk3LTRiMDItYmFhYS03ODgzNjMxMDIwYzEiLCJleHAiOjE2MTE0MzU2NzF9.JLRocvzykRyG6DN-uRjslg_b-QKjmXLm6EVtW5M7oDAsUnlmftOw6pgRkn8_ocB9ct_6PT4FE0PXvv9dqxGGBQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8011/search/POL/recovered?from=2021-01-05&to=2021-01-10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"search",
+						"POL",
+						"recovered"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "2021-01-05"
+						},
+						{
+							"key": "to",
+							"value": "2021-01-10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Return total stats form date to date from POL",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhMGViNzcyMS00NTk3LTRiMDItYmFhYS03ODgzNjMxMDIwYzEiLCJleHAiOjE2MTE0Mzc0OTF9.1yr_rD2Affgm03HGB4eno-xpYcU8GUWbgHEmHEJSeiZI6s6dU8b2gUI8oNoWwRTyTRAg_FwCVrv_UAlm6kMM7w"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8011/search/POL/total?from=2021-01-01&to=2021-01-02",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"search",
+						"POL",
+						"total"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "2021-01-01"
+						},
+						{
+							"key": "to",
+							"value": "2021-01-02"
+						}
+					]
+				},
+				"description": "Do poprawy Zwwraca złe wartości."
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Return all deaths from date to date in POL",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhMGViNzcyMS00NTk3LTRiMDItYmFhYS03ODgzNjMxMDIwYzEiLCJleHAiOjE2MTE0MzU2NzF9.JLRocvzykRyG6DN-uRjslg_b-QKjmXLm6EVtW5M7oDAsUnlmftOw6pgRkn8_ocB9ct_6PT4FE0PXvv9dqxGGBQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8011/search/POL/deaths?from=2021-01-01&to=2021-01-10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"search",
+						"POL",
+						"deaths"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "2021-01-01"
+						},
+						{
+							"key": "to",
+							"value": "2021-01-10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Return daily stats in DEU",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhMGViNzcyMS00NTk3LTRiMDItYmFhYS03ODgzNjMxMDIwYzEiLCJleHAiOjE2MTE0MzU2NzF9.JLRocvzykRyG6DN-uRjslg_b-QKjmXLm6EVtW5M7oDAsUnlmftOw6pgRkn8_ocB9ct_6PT4FE0PXvv9dqxGGBQ"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8011/search/DEU?date=2021-01-09",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"search",
+						"DEU"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2021-01-09"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Return daily stats in POL",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhMGViNzcyMS00NTk3LTRiMDItYmFhYS03ODgzNjMxMDIwYzEiLCJleHAiOjE2MTE0MzU2NzF9.JLRocvzykRyG6DN-uRjslg_b-QKjmXLm6EVtW5M7oDAsUnlmftOw6pgRkn8_ocB9ct_6PT4FE0PXvv9dqxGGBQ"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8011/search/POL?date=2021-01-08",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"search",
+						"POL"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2021-01-08"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Load Balancer",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjOGQ2Yzk3MC0yZTQ0LTRmMTMtODNhOC0xMTU4NWNlOGMzMGQiLCJleHAiOjE2MTE0Mjc0NzN9.c_NrhZFR1-Qd194qmziA_WcuirGMSr_UFrsCIu5Q_qYzXljhUkVgYwBs7dVIq73BFl8U6tDxHUnb3NFXKFL_gQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8011/search/status/check",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"search",
+						"status",
+						"check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Runtime configuration 1 attempt",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyNWU0ZjZiYi0yMzI3LTRmNjktOWM3ZC03YWJiZDk3MTkxODciLCJleHAiOjE2MDc5NTY2NjN9.plHFnPFIqQ43xMytuRY_zXFPVe_UzQLboNPGCJAU8yt_F14CYaq43jjVJg77Y9JbMDgpDaDfVKJuC9ijksfIgw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8011/account/users/status/check/git",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"account",
+						"users",
+						"status",
+						"check",
+						"git"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bus refresh",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8012/actuator/bus-refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8012",
+					"path": [
+						"actuator",
+						"bus-refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Runtime configuration 2 attempt",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjOGQ2Yzk3MC0yZTQ0LTRmMTMtODNhOC0xMTU4NWNlOGMzMGQiLCJleHAiOjE2MTE0MzIwMTd9.1J3QHGPwmXZ1alkugk0NfSTnU_tgQ7fmGoLJINQLqENKr3yJBqzysyeQFZaekK1_kAnHioG8sL7UQFw4TvDCjA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8011/account/users/status/check/git",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8011",
+					"path": [
+						"account",
+						"users",
+						"status",
+						"check",
+						"git"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actuator",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	]
+}

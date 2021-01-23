@@ -29,3 +29,5 @@ If you're in a hurry, try instead
 ```shell script
 docker rm -f $(docker ps -aq)
 ```
+## Dokumentacja
+Dokumentacja projektu jest dostępna w sekcji [Wiki](https://github.com/bartoszkordek/CovidTracker/wiki).

@@ -1,49 +1,66 @@
-version: '3'
+version: '3.2'
 
 networks:
-  covid:
-    driver: bridge
+  covid-tracker:
 
 services:
   discovery-service:
     image: discovery-service:0.0.1-SNAPSHOT
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     ports:
-      - "8010:8010"
+      - target: 8010
+        published: 8010
+        mode: host
     volumes:
       - ./logs/:/logs/
     networks:
-      - covid
+      - covid-tracker
 
   zuul-api-gateway:
     image: zuul-api-gateway:0.0.1-SNAPSHOT
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     ports:
-      - "8011:8011"
+      - target: 8011
+        published: 8011
+        mode: host
     depends_on:
       - discovery-service
     volumes:
       - ./logs/:/logs/
     networks:
-      - covid
+      - covid-tracker
 
   config-server:
     image: config-server:0.0.1-SNAPSHOT
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     ports:
-      - "8012:8012"
+      - target: 8012
+        published: 8012
+        mode: host
     depends_on:
       - zuul-api-gateway
     volumes:
       - ./logs/:/logs/
     networks:
-      - covid
+      - covid-tracker
 
   user-account-service:
     image: user-account-service:0.0.1-SNAPSHOT
     depends_on:
       - config-server
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     volumes:
       - ./logs/:/logs/
     networks:
-      - covid
+      - covid-tracker
 
   search-microservice:
     image: search-microservice:0.0.1-SNAPSHOT
@@ -51,17 +68,11 @@ services:
       - config-server
     volumes:
       - ./logs/:/logs/
+    deploy:
+      replicas: 2
+      endpoint_mode: dnsrr
     networks:
-      - covid
-
-  search-microservice-backup:
-    image: search-microservice:0.0.1-SNAPSHOT
-    depends_on:
-      - config-server
-    volumes:
-      - ./logs/:/logs/
-    networks:
-      - covid
+      - covid-tracker
 
   covid19apicom-listener:
     image: covid19apicom-listener:0.0.1-SNAPSHOT
@@ -69,8 +80,11 @@ services:
       - config-server
     volumes:
       - ./logs/:/logs/
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     networks:
-      - covid
+      - covid-tracker
 
   covid19-tracking-narrativa-service:
     image: covid19-tracking-narrativa-service:0.0.1-SNAPSHOT
@@ -78,8 +92,11 @@ services:
       - config-server
     volumes:
       - ./logs/:/logs/
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     networks:
-      - covid
+      - covid-tracker
 
   local-covid-data-service:
     image: local-covid-data-service:0.0.1-SNAPSHOT
@@ -87,54 +104,88 @@ services:
       - config-server
     volumes:
       - ./logs/:/logs/
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     networks:
-      - covid
+      - covid-tracker
 
   rabbitmq:
     image: rabbitmq:3.8-management
     ports:
-      - 15672:15672
-      - 5672:5672
-#      - 5671:5671
+      - target: 15672
+        published: 15672
+        mode: host
+      - target: 5672
+        published: 5672
+        mode: host
+      - target: 5671
+        published: 5671
+        mode: host
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     networks:
-      - covid
+      - covid-tracker
 
   zipkin:
     image: openzipkin/zipkin
     ports:
-      - 9411:9411
+      - target: 9411
+        published: 9411
+        mode: host
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     networks:
-      - covid
+      - covid-tracker
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
     ports:
-      - 9200:9200
-      - 9300:9300
+      - target: 9200
+        published: 9200
+        mode: host
+      - target: 9300
+        published: 9300
+        mode: host
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     volumes:
       - ./logs/:/usr/share/elasticsearch/data
     environment:
       - discovery.type=single-node
     networks:
-      - covid
+      - covid-tracker
 
   logstash:
     image: docker.elastic.co/logstash/logstash:7.10.1
     ports:
-      - 9600:9600
+      - target: 9600
+        published: 9600
+        mode: host
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     volumes:
       - ./elk/logstash/config/:/usr/share/logstash/pipeline/
       - ./logs/:/logs/
-    networks:
-      - covid
     depends_on:
       - elasticsearch
+    networks:
+      - covid-tracker
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.1
     ports:
-      - 5601:5601
-    networks:
-      - covid
+      - target: 5601
+        published: 5601
+        mode: host
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
     depends_on:
       - elasticsearch
+    networks:
+      - covid-tracker

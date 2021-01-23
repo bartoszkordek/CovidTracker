@@ -5,11 +5,14 @@ import com.covid.search.data.Covid19TrackingNarrativaServiceClient;
 import com.covid.search.data.LocalCovidDataServiceClient;
 import com.covid.search.model.CovidCountryResponse;
 import com.covid.search.model.RecoveredResponse;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.sleuth.instrument.async.TraceableExecutorService;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -19,14 +22,17 @@ public class CountryServiceImpl implements CountryService{
     private final Covid19ApiComServiceClient covid19ApiComServiceClient;
     private final Covid19TrackingNarrativaServiceClient covid19TrackingNarrativaServiceClient;
     private final LocalCovidDataServiceClient localCovidDataServiceClient;
+    private final BeanFactory beanFactory;
 
     @Autowired
     public CountryServiceImpl(Covid19ApiComServiceClient covid19ApiComServiceClient,
                               Covid19TrackingNarrativaServiceClient covid19TrackingNarrativaServiceClient,
-                              LocalCovidDataServiceClient localCovidDataServiceClient) {
+                              LocalCovidDataServiceClient localCovidDataServiceClient,
+                              BeanFactory beanFactory) {
         this.covid19ApiComServiceClient = covid19ApiComServiceClient;
         this.covid19TrackingNarrativaServiceClient = covid19TrackingNarrativaServiceClient;
         this.localCovidDataServiceClient = localCovidDataServiceClient;
+        this.beanFactory = beanFactory;
     }
 
     @Override
@@ -49,12 +55,14 @@ public class CountryServiceImpl implements CountryService{
     public int getCountryTotal(String country, String from, String to) {
 
         if (from == null && to == null) {
-            return covid19TrackingNarrativaServiceClient.getTotalCountry(country, from, to);
+            return covid19TrackingNarrativaServiceClient.getTotalCountry(country, null, null);
         } else {
-            final CompletableFuture<Integer> firstServiceResult
-                    = CompletableFuture.supplyAsync(localCovidDataServiceClient::getTodayTotalTest);
-            final CompletableFuture<Integer> secondServiceResult
-                    = CompletableFuture.supplyAsync(() -> covid19TrackingNarrativaServiceClient.getTotalCountry(country, from, to));
+            final CompletableFuture<Integer> firstServiceResult = CompletableFuture.supplyAsync(
+                    localCovidDataServiceClient::getTodayTotalTest,
+                    new TraceableExecutorService(beanFactory, Executors.newFixedThreadPool(5), "fetchIngredients"));
+            final CompletableFuture<Integer> secondServiceResult = CompletableFuture.supplyAsync(
+                    () -> covid19TrackingNarrativaServiceClient.getTotalCountry(country, from, to),
+                    new TraceableExecutorService(beanFactory, Executors.newFixedThreadPool(5), "fetchIngredients"));
             int result = 0;
             int servicesAnswered = 0;
             try {

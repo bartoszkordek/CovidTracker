@@ -17,4 +17,6 @@ public interface LocalCovidDataServiceClient {
     @GetMapping("/search/today/total/test")
     int getTodayTotalTest();
 
+
+
 }

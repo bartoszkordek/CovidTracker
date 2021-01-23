@@ -58,7 +58,7 @@ public class CountryServiceImpl implements CountryService{
             return covid19TrackingNarrativaServiceClient.getTotalCountry(country, null, null);
         } else {
             final CompletableFuture<Integer> firstServiceResult = CompletableFuture.supplyAsync(
-                    localCovidDataServiceClient::getTodayTotalTest,
+                    () -> covid19ApiComServiceClient.getTotalCountry(country, from, to),
                     new TraceableExecutorService(beanFactory, Executors.newFixedThreadPool(5), "fetchIngredients"));
             final CompletableFuture<Integer> secondServiceResult = CompletableFuture.supplyAsync(
                     () -> covid19TrackingNarrativaServiceClient.getTotalCountry(country, from, to),

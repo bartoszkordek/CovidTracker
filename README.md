@@ -35,4 +35,4 @@ docker stack rm covid-tracker
 1. H2-Console http://localhost:8011/account/h2-console/ (H2-Embedded JDBC URL: jdbc:h2:mem:testdb, user: covid, password: covid)
 
 ## Dokumentacja
-Dokumentacja projektu jest dostępna w sekcji [Wiki](https://github.com/bartoszkordek/CovidTracker/wiki).
+Dokumentacja projektu jest dostępna w pliku [Documentation](https://github.com/bartoszkordek/CovidTracker/blob/main/Documentation.pdf).

@@ -6,6 +6,255 @@
 	},
 	"item": [
 		{
+			"name": "Testy end-to-end",
+			"item": [
+				{
+					"name": "CreateUser - test",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const requestBody=JSON.parse(pm.request.body.raw);\r",
+									"pm.collectionVariables.set(\"user_create_body\",requestBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const { isEqual } = require('lodash');\r",
+									"\r",
+									"pm.test(\"Response status should be 200 or 201.\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"const resTime = Number.parseInt(1500);\r",
+									"\r",
+									"pm.test(`Response time should be less than ${resTime} ms.`, () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.lessThan(resTime);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body should have property 'id'.\", ()=>{\r",
+									"    pm.expect(pm.response).to.have.jsonBody(\"id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body should have property 'firstName'.\", ()=>{\r",
+									"    pm.expect(pm.response).to.have.jsonBody(\"firstName\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body should have property 'lastName'.\", ()=>{\r",
+									"    pm.expect(pm.response).to.have.jsonBody(\"lastName\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body should have property 'email'.\", ()=>{\r",
+									"    pm.expect(pm.response).to.have.jsonBody(\"email\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body should not have property 'password'.\", ()=>{\r",
+									"    pm.expect(pm.response).not.to.have.jsonBody(\"password\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Except property 'id', request and response bodies should be equal.\", () => {\r",
+									"    const requestBody = pm.collectionVariables.get(\"user_create_body\");\r",
+									"    let responseBody = pm.response.json();\r",
+									"\r",
+									"    delete responseBody.id;\r",
+									"    delete requestBody.password;\r",
+									"\r",
+									"    pm.expect(isEqual(requestBody,responseBody)).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Janek\",\r\n    \"lastName\": \"Kowalski\",\r\n    \"password\": \"test12314\",\r\n    \"email\": \"jan_kwalski4@wp.pl\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8011/account/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8011",
+							"path": [
+								"account",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login - test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const { isEqual } = require('lodash');\r",
+									"\r",
+									"pm.test(\"Response status should be 200 or 201.\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"const resTime = Number.parseInt(1000);\r",
+									"\r",
+									"pm.test(`Response time should be less than ${resTime} ms.`, () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.lessThan(resTime);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response should have header 'token'\", () => {\r",
+									"  pm.response.to.have.header(\"token\");\r",
+									"  \r",
+									"  console.log(pm.response.headers.get('token'));\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"user_login_token\", pm.response.headers.get('token'));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const user_create_body = pm.collectionVariables.get(\"user_create_body\");\r",
+									"\r",
+									"const user_login_body = {\r",
+									"    password: user_create_body.password,\r",
+									"    email: user_create_body.email\r",
+									"}\r",
+									"pm.variables.set('user_login_body', JSON.stringify(user_login_body ));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{user_login_body}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8011/account/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8011",
+							"path": [
+								"account",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search - test",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const user_token = pm.collectionVariables.get(\"user_login_token\");\r",
+									"console.log(user_token);\r",
+									"pm.request.headers.add({\r",
+									"    key: \"Authorization\",\r",
+									"    value: user_token\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const { isEqual } = require('lodash');\r",
+									"\r",
+									"pm.test(\"Response status should be 200 or 201.\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"const resTime = Number.parseInt(5000);\r",
+									"\r",
+									"pm.test(`Response time should be less than ${resTime} ms.`, () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.lessThan(resTime);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body should have property 'date'.\", ()=>{\r",
+									"    pm.expect(pm.response).to.have.jsonBody(\"date\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body should have property 'newInfected'.\", ()=>{\r",
+									"    pm.expect(pm.response).to.have.jsonBody(\"newInfected\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body should have property 'newRecovered'.\", ()=>{\r",
+									"    pm.expect(pm.response).to.have.jsonBody(\"newRecovered\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhMGViNzcyMS00NTk3LTRiMDItYmFhYS03ODgzNjMxMDIwYzEiLCJleHAiOjE2MTE0MzU2NzF9.JLRocvzykRyG6DN-uRjslg_b-QKjmXLm6EVtW5M7oDAsUnlmftOw6pgRkn8_ocB9ct_6PT4FE0PXvv9dqxGGBQ",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8011/search/POL?date=2021-01-07",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8011",
+							"path": [
+								"search",
+								"POL"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2021-01-07"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "CreateUser",
 			"request": {
 				"method": "POST",
@@ -375,17 +624,24 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "user_body",
+			"value": ""
 		},
 		{
-			"name": "Actuator",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": ""
-				}
-			},
-			"response": []
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"key": "user_create_body",
+			"value": ""
+		},
+		{
+			"key": "user_login_token",
+			"value": ""
 		}
 	]
 }
